@@ -1,11 +1,15 @@
 package com.example.dhammond1.testapp;
 
+import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void CreateDBSample(){
-        DatabaseHandler dbHandler = new DatabaseHandler(getApplicationContext(),null, null, 1);
+        //DatabaseHandler dbHandler = new DatabaseHandler(getApplicationContext(),null, null, 1);
+        DatabaseHandler dbHandler = DatabaseHandler.getInstance(getApplicationContext());
         Log.d("Insert: ", "Inserting ...");
         Calendar c = Calendar.getInstance();
 
@@ -95,7 +101,47 @@ public class MainActivity extends AppCompatActivity {
         List<TemperatureEntry> entries = dbHandler.getEntriesByDate("02/14/2016");
     }
 
-    public final static class GetDateTime
+    public class DataService extends Service {
+
+        private final IBinder mBinder = new MyBinder();
+        public TemperatureEntry sampleEntry = new TemperatureEntry(null, null, null, null);
+
+        public int onStartCommand(Intent intent, int flags, int startId){
+            //to do ---- something useful
+            //for now, write a method that will return a random value of pit and meat temp
+            //in a TemperatureEntry class
+            ReadTemperatures(sampleEntry);
+            return Service.START_NOT_STICKY;
+        }
+
+        public IBinder onBind(Intent intent){
+            //to do for communication return IBinder implementation
+            return null;
+        }
+
+        public class MyBinder extends Binder {
+            DataService getService(){
+                return DataService.this;
+            }
+        }
+
+        public TemperatureEntry GetTemperatureEntry()
+        {
+            return sampleEntry;
+        }
+
+        private void ReadTemperatures(TemperatureEntry sample)
+        {
+            Random rand = new Random();
+            int pit = rand.nextInt(240) + 20;
+            rand = new Random();
+            int meat = rand.nextInt(220) + 60;
+            sample.setPitTemp(Integer.toString(pit));
+            sample.setMeatTemp(Integer.toString(meat));
+        }
+    }
+
+   /* public final static class GetDateTime
     {
         public static String GetDate(Calendar calendar)
         {
@@ -114,10 +160,10 @@ public class MainActivity extends AppCompatActivity {
             String time = String.format("%1$tl %1$tM %1$tS %1$tp", calendar);
             return time;
         }
-    }
+    }*/
 
     //TempEntry class
-    public final class TemperatureEntry
+   /* public final class TemperatureEntry
     {
         //private vars
         int _id;
@@ -192,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
     public class DatabaseHandler extends SQLiteOpenHelper
     {
         Context _context;
+
 
         // Database Version
         private static final int DATABASE_VERSION = 3;
@@ -278,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
             db.close();
         }
 
-       /* public TemperatureEntry getEntry(int id)
+       *//* public TemperatureEntry getEntry(int id)
         {
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor cursor = db.query(TABLE_TEMPSTER, new String[]{
@@ -293,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
             cursor.close();
             return entry;
 
-        }*/
+        }*//*
 
         public List<TemperatureEntry> getEntriesByDate(String date)
         {
@@ -332,5 +379,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    }
+    }*/
 }
