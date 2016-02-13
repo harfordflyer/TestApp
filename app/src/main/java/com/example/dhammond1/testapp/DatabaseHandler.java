@@ -137,7 +137,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_ENTRIES  + " WHERE " + COLUMN_DATE + " = \"" + date + "\"";
-        //String selectQuery = "SELECT  * FROM " + TABLE_ENTRIES + " WHERE " + COLUMN_DATE + " = \"" + date + "\"";
 
         SQLiteDatabase db = this.getWritableDatabase();
         //Cursor cursor = db.rawQuery(selectQuery, new String[]{date});

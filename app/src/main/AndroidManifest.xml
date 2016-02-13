@@ -17,14 +17,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <service
-            android:name="DataService"
-            android:icon="@drawable/icon"
-            android:lable="@string/service_name"
-            >
 
-        </service>
+        </activity>
+       <service android:name="com.example.dhammond1.testapp.DataService"
+                android:enabled="true" />
+
     </application>
 
 </manifest>
