@@ -52,11 +52,22 @@ public class MainActivity extends AppCompatActivity {
 
         CreateDBSample();
         Intent i = new Intent(this, DataService.class);
-        i.putExtra("name", "testapp_service");
+        i.putExtra("temps", new String[]{"1000","2000"});
         startService(i);
         boolean running = isServiceRunning(DataService.class);
-        Toast.makeText(this, "service running = " + running, Toast.LENGTH_LONG);
+        //Toast.makeText(this, "service running = " + running, Toast.LENGTH_LONG);
 
+        List<TemperatureEntry> entries = dbHandler.getEntriesByDate("02/13/2016");
+        Log.d("getting db entries ", "entries");
+        for(TemperatureEntry t : entries)
+        {
+            StringBuilder b = new StringBuilder();
+            b.append(t.getMeatTemp());
+            b.append(" ");
+            b.append(t.getPitTemp());
+            String s = b.toString();
+            Log.d("entry string: ", s);
+        }
     }
 
     @Override
@@ -101,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void CreateDBSample(){
         dbHandler = DatabaseHandler.getInstance(getApplicationContext());
-        Log.d("Insert: ", "Inserting ...");
-        Calendar c = Calendar.getInstance();
-
 
        /* dbHandler.addEntry(new TemperatureEntry(GetDateTime.GetDate(c),GetDateTime.GetTime(c),"200", "150"));
 
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Reading", "Reading entries...");
 
        // List<TemperatureEntry> entries = dbHandler.getEntriesByDate(GetDateTime.GetDate(c));
-        List<TemperatureEntry> entries = dbHandler.getEntriesByDate("02/14/2016");
+
     }
 
 
